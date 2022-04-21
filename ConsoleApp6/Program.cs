@@ -10,7 +10,9 @@ namespace MyApp
         public double Balans { get; set; }
         public BankCard(string BankName,string pin,double Balans)
         {
+            Random random = new Random();
             this.BankName = BankName; Pin = pin;this.Balans = Balans;
+            CVC = random.Next(100, 999);
         }
 
     } 
@@ -219,16 +221,36 @@ namespace MyApp
                 else { Console.WriteLine("Enter (UpArrow && DownArrow && click Enter to select)"); continue; }
             } while (true);
         }
+        private void Block(int number)
+        {
+            Console.ForegroundColor = ConsoleColor.Red; Console.Clear();
+            for (int i = 0; i < number+1; i++)
+            {
+                Console.WriteLine($"BLOCK\n{i+1} Second");
+                Thread.Sleep(1000);
+                Console.Clear();
+            }
+            Console.ForegroundColor = ConsoleColor.White; Console.Clear();
+        }
         public void Start()
         {
-            int count= 0;
+
+            int count = 0, sleeptime = 0,sleeptimecout=3;
+            Console.WriteLine("you only have the right to misspell 3 times");
             do
             {
+                if (sleeptime == 3)
+                {
+                    sleeptime = 0;
+                    sleeptimecout *= sleeptimecout;
+                    Block(sleeptimecout);
+                }
                 Console.Write("Enter pin: ");
                 var pin = Console.ReadLine();
                 count = check(pin);
                 if (count >= 0) break;
                 Console.Clear();
+                sleeptime++;
             } while (count < 0);
             Choice(count);
         }
@@ -238,8 +260,8 @@ namespace MyApp
         static void Main(string[] args)
         {
            Client[] client = {
-           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1231233", 100)),
-           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "123", 100))
+           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1234", 100)),
+           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1234", 100))
            };
            ATM A = new(client);
            A.Start();
