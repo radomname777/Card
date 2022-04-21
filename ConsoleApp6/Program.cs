@@ -195,7 +195,7 @@ namespace MyApp
         static void Main(string[] args)
         {
            Client[] client = {
-           new Client(12, "a", "A", 12, 12, new BankCard("Z", "Z", 100))
+           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1231233", 100))
            };
            ATM A = new(client);
            A.Start();
