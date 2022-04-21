@@ -55,7 +55,6 @@ namespace MyApp
         {
             Console.Write("Enter Money: ");
             double num = Convert.ToDouble(Console.ReadLine());
-  
                try
                {
                 if (num < 0) { throw new Exception(); };
@@ -68,8 +67,6 @@ namespace MyApp
                 Thread.Sleep(1000);
                 return 0;
                }
-            
-            
         }
         private void Money2(int money,int array)
         {
@@ -103,7 +100,6 @@ namespace MyApp
                         break;
                     default:
                         break;
-                
                 }
                 client[array].Card.Balans -= var2;
                 return;
@@ -114,8 +110,52 @@ namespace MyApp
                 Console.WriteLine("No money in balance");
                 Thread.Sleep(1000);
             }
-
-
+        }
+        private void CashCard(int array,int array2)
+        {
+            try
+            {
+                while (true)
+                {
+                    Console.WriteLine("rite the amount: ");
+                    double sum = Convert.ToDouble(Console.ReadLine());
+                    if (sum <= 0) continue;
+                    else if (client[array].Card.Balans <= 0) throw new ArgumentNullException();
+                    else if (sum <= client[array].Card.Balans)
+                    {
+                        client[array].Card.Balans -= sum;
+                        client[array2].Card.Balans += sum;
+                        Console.WriteLine("Complate!!!");
+                        break;
+                    }
+                    else continue;
+                }
+            }
+            catch (ArgumentNullException AX)
+            {
+                client[array].Card.Balans = 0;
+                Console.WriteLine("You have no money");
+            }
+            catch { 
+            }
+            Thread.Sleep(800);
+        }
+        private void FriendCard(int array)
+        {
+            int number;
+            do
+            {
+              Console.Write("Enter Pin: ");
+              var pincode = Console.ReadLine();
+              number = check(pincode);
+              if (pincode == client[number].Card.Pin)
+              {
+                    CashCard(array, number);
+                    return;
+              }
+              else continue;
+            } while (number==-1);
+            
         }
         private void WithdrawMoney(int array)
         {
@@ -138,7 +178,6 @@ namespace MyApp
                 else if (selec.Key == ConsoleKey.Enter) { Money2(number, array); return; }
                 else { Console.WriteLine("Enter (UpArrow && DownArrow && click Enter to select)"); continue; }
             } while (true);
-
         }
         private void Choice2(int sel,int array)
         {
@@ -152,6 +191,9 @@ namespace MyApp
                 case 1:
                     WithdrawMoney(array);
                     break;
+                case 2:
+                    FriendCard(array);
+                    break;
                 default:
                     break;
             }
@@ -164,14 +206,15 @@ namespace MyApp
             Console.ForegroundColor = ConsoleColor.DarkYellow; Console.Clear();
             do
             {
-                if (number == 0) Console.WriteLine("balance\t<-\nWithdraw money");
-                else Console.WriteLine("balans\t\nWithdraw money<-");
+                if (number == 0) Console.WriteLine("Balance\t<-\nWithdraw Money\nCash on Card");
+                else if(number==1) Console.WriteLine("Balance\t\nWithdraw Money<- \nCash on Card");
+                else Console.WriteLine("Balance\t\nWithdraw Money\nCash on Card <-");
                 ConsoleKeyInfo selec = Console.ReadKey();
                 Console.Clear();
-                if (selec.Key == ConsoleKey.DownArrow && number == 0) number = 1;
-                else if (selec.Key == ConsoleKey.UpArrow && number == 1) number = 0;
-                else if (selec.Key == ConsoleKey.UpArrow) number++;
-                else if (selec.Key == ConsoleKey.DownArrow) number--;
+                if (selec.Key == ConsoleKey.UpArrow && number == 0) number = 2;
+                else if (selec.Key == ConsoleKey.DownArrow && number == 2) number = 0;
+                else if (selec.Key == ConsoleKey.UpArrow) number--;
+                else if (selec.Key == ConsoleKey.DownArrow) number++;
                 else if (selec.Key == ConsoleKey.Enter) Choice2(number,array);
                 else { Console.WriteLine("Enter (UpArrow && DownArrow && click Enter to select)"); continue; }
             } while (true);
@@ -195,7 +238,8 @@ namespace MyApp
         static void Main(string[] args)
         {
            Client[] client = {
-           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1231233", 100))
+           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "1231233", 100)),
+           new Client(12, "AAAAAA", "AAAAA", 21, 12, new BankCard("AAAAA", "123", 100))
            };
            ATM A = new(client);
            A.Start();
